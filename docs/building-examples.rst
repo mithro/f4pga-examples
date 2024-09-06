@@ -1,6 +1,7 @@
+.. _Building-Examples:
 
 Building example designs
-========================
+########################
 
 Before building any example, set the installation directory to match what you
 set it to earlier, for example:
@@ -8,7 +9,7 @@ set it to earlier, for example:
 .. code-block:: bash
    :name: export-install-dir
 
-   export INSTALL_DIR=~/opt/symbiflow
+   export F4PGA_INSTALL_DIR=~/opt/f4pga
 
 Select your FPGA family:
 
@@ -19,34 +20,21 @@ Select your FPGA family:
       .. code-block:: bash
          :name: fpga-fam-xc7
 
-         FPGA_FAM="xc7"
+         export FPGA_FAM="xc7"
 
    .. group-tab:: EOS S3
 
       .. code-block:: bash
          :name: fpga-fam-eos-s3
 
-         FPGA_FAM="eos-s3"
+         export FPGA_FAM="eos-s3"
 
 Next, prepare the environment:
 
-.. tabs::
+.. code-block:: bash
+   :name: conda-prep-env
 
-   .. group-tab:: Artix-7
-
-      .. code-block:: bash
-         :name: conda-prep-env-xc7
-
-         export PATH="$INSTALL_DIR/$FPGA_FAM/install/bin:$PATH";
-         source "$INSTALL_DIR/$FPGA_FAM/conda/etc/profile.d/conda.sh"
-
-   .. group-tab:: EOS S3
-
-      .. code-block:: bash
-         :name: conda-prep-env-eos-s3
-
-         export PATH="$INSTALL_DIR/$FPGA_FAM/quicklogic-arch-defs/bin:$PATH";
-         source "$INSTALL_DIR/$FPGA_FAM/conda/etc/profile.d/conda.sh"
+   source "$F4PGA_INSTALL_DIR/$FPGA_FAM/conda/etc/profile.d/conda.sh"
 
 Finally, enter your working Conda environment:
 
@@ -75,7 +63,7 @@ Finally, enter your working Conda environment:
 
 
 Xilinx 7-Series
----------------
+===============
 
 Enter the directory that contains examples for Xilinx 7-Series FPGAs:
 
@@ -84,40 +72,20 @@ Enter the directory that contains examples for Xilinx 7-Series FPGAs:
 
    cd xc7
 
-.. jinja:: xc7_counter_test
-   :file: templates/example.jinja
+Then, follow the guidelines for each example:
 
-.. jinja:: xc7_picosoc_demo
-   :file: templates/example.jinja
+.. toctree::
 
-.. jinja:: xc7_litex_demo
-   :file: templates/example.jinja
-
-.. jinja:: xc7_linux_litex_demo
-   :file: templates/example.jinja
-
-.. jinja:: xc7_timer
-   :file: templates/example.jinja
-
-.. jinja:: xc7_pulse_width_led
-   :file: templates/example.jinja 
-
-
-
-Additional Examples
--------------------
-
-In addition to the designs we have gone over here, you can also find several other exciting designs
-for the basys3 board in the additional_examples directory:
-
-.. code-block:: bash
-   :name: additional_examples
-
-   cd additional_examples
-
+   xc7/counter_test
+   xc7/timer
+   xc7/pulse_width_led
+   xc7/picosoc_demo
+   xc7/litex_demo
+   xc7/linux_litex_demo
+   xc7/litex_sata_demo
 
 QuickLogic EOS S3
------------------
+=================
 
 Enter the directory that contains examples for QuickLogic EOS S3:
 
@@ -126,5 +94,8 @@ Enter the directory that contains examples for QuickLogic EOS S3:
 
    cd eos-s3
 
-.. jinja:: eos-s3_btn_counter
-   :file: templates/example.jinja
+Then, follow the guidelines for each example:
+
+.. toctree::
+
+   eos-s3/btn_counter

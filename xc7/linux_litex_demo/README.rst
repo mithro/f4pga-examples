@@ -1,12 +1,13 @@
 Linux LiteX demo
 ~~~~~~~~~~~~~~~~
 
-This example design features a Linux-capable SoC based around VexRiscv soft
-CPU. It also includes DDR and Ethernet controllers. To build the litex example,
-run the following commands:
+This example design features a Linux-capable SoC based around VexRiscv soft CPU.
+It also includes DDR and Ethernet controllers.
+To build the litex example, run the following commands:
 
-To build the linux-litex-demo example, first re-navigate to the directory that contains examples for Xilinx 7-Series FPGAs. Then depending on your hardware, run:
-
+To build the linux-litex-demo example, first re-navigate to the directory that contains examples for Xilinx 7-Series
+FPGAs.
+Then, depending on your hardware, run:
 
 .. code-block:: bash
    :name: example-litex-a35t-group
@@ -32,10 +33,12 @@ Now you can upload the design with:
 
 .. note::
 
-   LiteX on Linux demo expects you to use IPv4 address of ``192.168.100.100/24``
-   on your network interface.
+   The LiteX design is provided with an Ethernet module that uses the ``192.168.100.100/24``
+   IPv4 address that needs to be set on your network interface.
 
-You should observe the following line in the OpenOCD output
+   You may find these information useful to correctly setup the network interface: `timvideos/litex-buildenv/wiki/Networking <https://github.com/timvideos/litex-buildenv/wiki/Networking>`__.
+
+You should observe the following line in the OpenOCD output:
 
 .. code-block:: bash
 

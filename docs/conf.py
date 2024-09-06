@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2020  The SymbiFlow Authors.
+# Copyright (C) 2020-2022 F4PGA Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,31 +23,34 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-# -- Path setup --------------------------------------------------------------
+# -- Path setup -----------------------------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
+from os import path as os_path, scandir as os_scandir
+from sys import path as sys_path
+from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('.'))
+sys_path.insert(0, os_path.abspath('.'))
 
-# -- Project information -----------------------------------------------------
+# -- Project information --------------------------------------------------------------------------
 
-project = u'SymbiFlow examples'
-authors = u'SymbiFlow'
-copyright = authors + u', 2020'
+project = 'F4PGA examples'
+authors = 'F4PGA Authors'
+copyright = f'{authors}, 2020 - 2022'
 
-# -- General configuration ---------------------------------------------------
+# -- General configuration ------------------------------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.extlinks',
+    'sphinx.ext.intersphinx',
     'sphinx_tabs.tabs',
-    'sphinxcontrib.jinja',
+    'sphinx_jinja',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,46 +61,61 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
-# -- Options for HTML output -------------------------------------------------
-
-# The theme to use for HTML and HTML Help pages.  See the documentation for
-# a list of builtin themes.
-#
+# -- Options for HTML output ----------------------------------------------------------------------
 
 html_show_sourcelink = True
 
-html_theme = 'sphinx_symbiflow_theme'
+html_theme = 'sphinx_f4pga_theme'
 
 html_theme_options = {
-    'github_url' : 'https://github.com/SymbiFlow/symbiflow-examples',
-    'globaltoc_collapse': True
+    'repo_name': 'chipsalliance/f4pga-examples',
+    'github_url' : 'https://github.com/chipsalliance/f4pga-examples',
+    'globaltoc_collapse': True,
+    'color_primary': 'indigo',
+    'color_accent': 'blue',
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
 
-# -- Collect READMEs from examples --------------------------------------------
+html_logo = str(Path(html_static_path[0]) / 'logo.svg')
+html_favicon = str(Path(html_static_path[0]) / 'favicon.svg')
 
-from collect_readmes import full_name_lut, families, fill_context
+# -- Collect READMEs from examples -----------------------------------------------------------------
+
+from collect_readmes import families, fill_context
 
 jinja_contexts = {}
-top_dir = os.path.join(os.path.dirname(__file__), '..')
+top_dir = Path(__file__).resolve().parent.parent
 for family in families:
-    examples = os.scandir(os.path.join(top_dir, family))
+    examples = os_scandir(str(top_dir / family))
     for example in examples:
-        if example.is_dir():
+        path = top_dir / family / example / 'README.rst'
+        if example.is_dir() and path.is_file():
+            with path.open('r') as frptr:
+                jinja_contexts['_'.join((family, example.name))] = {'blocks': fill_context(frptr.read())}
 
-            # get README
-            path = os.path.join(top_dir, family, example, 'README.rst')
+# -- Sphinx.Ext.InterSphinx ------------------------------------------------------------------------
 
-            # skip if file does not exist
-            if not os.path.isfile(path):
-                continue
+intersphinx_mapping = {
+   'python':     ('https://docs.python.org/3.6/', None),
+   'f4pga':      ('https://f4pga.readthedocs.io/en/latest/', None),
+   'arch-defs':  ('https://f4pga.readthedocs.io/projects/arch-defs/en/latest/', None),
+   'fasm':       ('https://fasm.readthedocs.io/en/latest/', None),
+   'prjtrellis': ('https://prjtrellis.readthedocs.io/en/latest/', None),
+   'prjxray':    ('https://f4pga.readthedocs.io/projects/prjxray/en/latest/', None),
+   'vtr':        ('https://docs.verilogtorouting.org/en/latest/', None),
+}
 
-            with open(path) as f:
-                text = f.read()
+# -- Sphinx.Ext.ExtLinks ---------------------------------------------------------------------------
 
-            key = '_'.join((family, example.name))
-            jinja_contexts[key] = {'blocks': fill_context(text)}
+extlinks = {
+   'wikipedia': ('https://en.wikipedia.org/wiki/%s', 'wikipedia:'),
+   'gh':        ('https://github.com/%s', 'gh:'),
+   'ghsharp':   ('https://github.com/chipsalliance/f4pga-examples/issues/%s', '#'),
+   'ghissue':   ('https://github.com/chipsalliance/f4pga-examples/issues/%s', 'issue #'),
+   'ghpull':    ('https://github.com/chipsalliance/f4pga-examples/pull/%s', 'pull request #'),
+   'ghsrc':     ('https://github.com/chipsalliance/f4pga-examples/blob/master/%s', '')
+}

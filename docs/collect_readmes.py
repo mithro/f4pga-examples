@@ -102,7 +102,7 @@ def handle_img(block):
 
     ret = {}
     ret['type'] = 'image'
-    ret['uri'] = os.path.join(*block['uri'].split('/')[3:])
+    ret['uri'] = '../_static/' + os.path.join(*block['uri'].split('/')[3:])
     ret['align'] = block.get('align', 'center')
     ret['width'] = block.get('width', '100%')
 
@@ -212,7 +212,7 @@ def get_blocks(text):
 
 def fill_context(text):
     """
-    Creates a jinja context dictionary for a SymbiFlow Toolchain usage example.
+    Creates a jinja context dictionary for a F4PGA Toolchain usage example.
     The dictionary contains all the important information from the example's README.
 
     Args:
